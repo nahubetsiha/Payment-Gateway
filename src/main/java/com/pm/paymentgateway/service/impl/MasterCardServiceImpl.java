@@ -20,14 +20,15 @@ public class MasterCardServiceImpl implements MasterCardService {
     }
 
     public MasterCardTransaction processTransaction(MasterCard masterCard, double amount){
-        if(masterCard.getAvailableBalance()-amount < 0) throw new InsufficientBalanceException("Insufficient balance to complete transaction");
-
-        masterCard.setAvailableBalance(masterCard.getAvailableBalance()-amount);
-        MasterCardTransaction masterCardTransaction = new MasterCardTransaction();
-        masterCardTransaction.setCard(masterCard);
-        masterCardTransaction.setChargedAmount(amount);
-        masterCardTransaction.setDate(LocalDate.now());
-        masterCardTransaction.setVendor("Shopping Cart");
+//        if(masterCard.getAvailableBalance()-amount < 0) throw new InsufficientBalanceException("Insufficient balance to complete transaction");
+//
+//        masterCard.setAvailableBalance(masterCard.getAvailableBalance()-amount);
+//        MasterCardTransaction masterCardTransaction = new MasterCardTransaction();
+//        masterCardTransaction.setCard(masterCard);
+//        masterCardTransaction.setChargedAmount(amount);
+//        masterCardTransaction.setDate(LocalDate.now());
+//        masterCardTransaction.setVendor("Shopping Cart");
+        return null;
 
     }
 

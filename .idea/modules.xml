@@ -2,7 +2,7 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/.idea/Payment-Gateway.iml" filepath="$PROJECT_DIR$/.idea/Payment-Gateway.iml" />
+      <module fileurl="file://$PROJECT_DIR$/PaymentGateway.iml" filepath="$PROJECT_DIR$/PaymentGateway.iml" />
     </modules>
   </component>
 </project>
