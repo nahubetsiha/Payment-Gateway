@@ -10,6 +10,6 @@ public interface RecipientService {
     List<Recipient> getAllRecipients();
     Recipient getRecipient(Long recipientId);
     Recipient addRecipient(Recipient recipient);
-    Recipient updateRecipient(Long recipientId);
+    Recipient updateRecipient(Recipient recipient, Long recipientId);
     Long deleteRecipient(Long recipientId);
 }

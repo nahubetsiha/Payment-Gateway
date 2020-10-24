@@ -10,6 +10,6 @@ public interface VisaService {
     List<Visa> getAllCards();
     Visa getCard(Long cardId);
     Visa addCard(Visa visa);
-    Visa updateCard(Long cardId);
+    Visa updateCard(Visa visa, Long cardId);
     Long deleteCard(Long cardId);
 }

@@ -11,6 +11,6 @@ public interface MasterCardService {
     List<MasterCard> getAllCards();
     MasterCard getCard(Long cardId);
     MasterCard addCard(MasterCard masterCard);
-    MasterCard updateCard(Long cardId);
+    MasterCard updateCard(MasterCard masterCard, Long cardId);
     Long deleteCard(Long cardId);
 }

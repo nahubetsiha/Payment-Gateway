@@ -1,5 +1,6 @@
 package com.pm.paymentgateway.service.impl;
 
+import com.pm.paymentgateway.exception.EntityNotFoundException;
 import com.pm.paymentgateway.exception.InsufficientBalanceException;
 import com.pm.paymentgateway.model.MasterCard;
 import com.pm.paymentgateway.model.MasterCardTransaction;
@@ -7,6 +8,7 @@ import com.pm.paymentgateway.repository.MasterCardRepository;
 import com.pm.paymentgateway.service.MasterCardService;
 import org.springframework.stereotype.Service;
 
+import javax.validation.Valid;
 import java.time.LocalDate;
 import java.util.List;
 
@@ -35,26 +37,48 @@ public class MasterCardServiceImpl implements MasterCardService {
 
     @Override
     public List<MasterCard> getAllCards() {
-        return masterCardRepository.findAll();
+
+        List<MasterCard> masterCards = masterCardRepository.findAll();
+
+        if(masterCards == null) throw new EntityNotFoundException(MasterCard.class);
+
+        return masterCards;
     }
 
     @Override
     public MasterCard getCard(Long cardId) {
-        return null;
+        MasterCard masterCard = masterCardRepository.getOne(cardId);
+        if(masterCard == null) throw new EntityNotFoundException(MasterCard.class, cardId);
+
+        return masterCard;
     }
 
     @Override
-    public MasterCard addCard(MasterCard masterCard) {
-        return null;
+    public MasterCard addCard(@Valid MasterCard masterCard) {
+        return masterCardRepository.save(masterCard);
     }
 
     @Override
-    public MasterCard updateCard(Long cardId) {
-        return null;
+    public MasterCard updateCard(@Valid MasterCard masterCard, Long cardId) {
+
+        return masterCardRepository.findById(cardId)
+                .map(cardToUpdate -> {
+                    cardToUpdate.setAvailableBalance(masterCard.getAvailableBalance());
+                    cardToUpdate.setCardNumber(masterCard.getCardNumber());
+                    cardToUpdate.setExpDate(masterCard.getExpDate());
+                    cardToUpdate.setName(masterCard.getName());
+                    cardToUpdate.setPin(masterCard.getPin());
+
+                    return cardToUpdate;
+                }).orElseThrow(() -> new EntityNotFoundException(MasterCard.class, cardId));
     }
 
     @Override
     public Long deleteCard(Long cardId) {
-        return null;
+        MasterCard masterCard = masterCardRepository.getOne(cardId);
+        if(masterCard == null) throw new EntityNotFoundException(MasterCard.class, cardId);
+
+        masterCardRepository.delete(masterCard);
+        return cardId;
     }
 }
