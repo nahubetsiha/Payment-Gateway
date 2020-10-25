@@ -11,10 +11,11 @@ public class MasterCardTransaction {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
-    @OneToOne
+    private Long transactionId;
+    @ManyToOne
     private MasterCard card;
     private double chargedAmount;
     private LocalDate date;
-    private String vendor;
+    @OneToOne
+    private Recipient recipient;
 }

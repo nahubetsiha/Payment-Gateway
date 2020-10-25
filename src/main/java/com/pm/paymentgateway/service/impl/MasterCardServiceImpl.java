@@ -11,6 +11,7 @@ import org.springframework.stereotype.Service;
 import javax.validation.Valid;
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class MasterCardServiceImpl implements MasterCardService {
@@ -21,7 +22,8 @@ public class MasterCardServiceImpl implements MasterCardService {
         this.masterCardRepository = masterCardRepository;
     }
 
-    public MasterCardTransaction processTransaction(MasterCard masterCard, double amount){
+    @Override
+    public MasterCardTransaction processTransaction(MasterCard masterCard, double amount, Long recipientId){
 //        if(masterCard.getAvailableBalance()-amount < 0) throw new InsufficientBalanceException("Insufficient balance to complete transaction");
 //
 //        masterCard.setAvailableBalance(masterCard.getAvailableBalance()-amount);
@@ -40,17 +42,19 @@ public class MasterCardServiceImpl implements MasterCardService {
 
         List<MasterCard> masterCards = masterCardRepository.findAll();
 
-        if(masterCards == null) throw new EntityNotFoundException(MasterCard.class);
+        if(masterCards.isEmpty()) throw new EntityNotFoundException(MasterCard.class);
 
         return masterCards;
     }
 
     @Override
-    public MasterCard getCard(Long cardId) {
-        MasterCard masterCard = masterCardRepository.getOne(cardId);
-        if(masterCard == null) throw new EntityNotFoundException(MasterCard.class, cardId);
-
-        return masterCard;
+    public Optional<MasterCard> getCard(Long cardId) {
+//        MasterCard masterCard = masterCardRepository.getOne(cardId);
+//        if(masterCard == null) throw new EntityNotFoundException(MasterCard.class, cardId);
+//
+//        return masterCardRepository.findById(cardId)
+//                .orElseThrow(()-> new EntityNotFoundException(MasterCard.class, cardId));
+        return masterCardRepository.findById(cardId);
     }
 
     @Override

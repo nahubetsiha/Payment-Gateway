@@ -10,8 +10,8 @@ import java.time.LocalDate;
 public class VisaTransaction {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
-    @OneToOne
+    private Long transactionId;
+    @ManyToOne
     private Visa card;
     private double chargedAmount;
     private LocalDate date;

@@ -1,11 +1,14 @@
 package com.pm.paymentgateway.exception;
 
 import org.apache.commons.lang3.StringUtils;
+import org.springframework.http.HttpStatus;
+import org.springframework.web.bind.annotation.ResponseStatus;
 
 import java.util.HashMap;
 import java.util.Map;
 import java.util.stream.IntStream;
 
+@ResponseStatus(code = HttpStatus.NOT_FOUND)
 public class EntityNotFoundException extends RuntimeException {
 
     public EntityNotFoundException(Class clazz, Long... searchParamsMap) {
