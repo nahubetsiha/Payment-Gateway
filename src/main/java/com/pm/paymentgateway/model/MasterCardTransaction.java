@@ -16,6 +16,6 @@ public class MasterCardTransaction {
     private MasterCard card;
     private double chargedAmount;
     private LocalDate date;
-    @OneToOne
+    @ManyToOne(cascade = CascadeType.ALL)
     private Recipient recipient;
 }

@@ -7,7 +7,7 @@ import java.util.List;
 import java.util.Optional;
 
 @Service
-public interface MTrancsactionService {
+public interface MTransactionService {
     List<MasterCardTransaction> getAllTransactions();
     Optional<MasterCardTransaction> getTransaction(Long transactionId);
     MasterCardTransaction addTransaction(MasterCardTransaction masterCardTransaction);

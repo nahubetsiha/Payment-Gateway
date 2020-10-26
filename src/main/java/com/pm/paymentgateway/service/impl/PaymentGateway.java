@@ -1,24 +1,26 @@
-package com.pm.paymentgateway.service;
+package com.pm.paymentgateway.service.impl;
 
 import com.pm.paymentgateway.exception.EntityNotFoundException;
 import com.pm.paymentgateway.model.MasterCard;
+import com.pm.paymentgateway.service.*;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 
 @Service
 public class PaymentGateway {
 
-    MasterCardService masterCardService;
-    VisaService visaService;
+    CardService masterCardService;
+    CardService visaService;
     RecipientService recipientService;
-    MTrancsactionService mTrancsactionService;
+    MTransactionService mTransactionService;
     VTransactionService vTransactionService;
 
-    public PaymentGateway(MasterCardService masterCardService, VisaService visaService,
-                          RecipientService recipientService, MTrancsactionService mTrancsactionService, VTransactionService vTransactionService){
+    public PaymentGateway(@Qualifier("masterCardService") CardService masterCardService, @Qualifier("visaService") CardService visaService,
+                          RecipientService recipientService, @Qualifier("MTransactionService") MTransactionService mTransactionService, @Qualifier("VTransactionService") VTransactionService vTransactionService){
         this.masterCardService = masterCardService;
         this.visaService = visaService;
         this.recipientService = recipientService;
-        this.mTrancsactionService = mTrancsactionService;
+        this.mTransactionService = mTransactionService;
         this.vTransactionService = vTransactionService;
     }
 
@@ -34,6 +36,6 @@ public class PaymentGateway {
         else if (length==16 && firstDigit==4){
 
         }
-        else throw new EntityNotFoundException();
+        else throw new EntityNotFoundException(MasterCard.class);
     }
 }

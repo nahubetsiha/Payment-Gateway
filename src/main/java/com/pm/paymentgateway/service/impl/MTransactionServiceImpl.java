@@ -1,16 +1,17 @@
 package com.pm.paymentgateway.service.impl;
 
 import com.pm.paymentgateway.exception.EntityNotFoundException;
-import com.pm.paymentgateway.model.MasterCard;
 import com.pm.paymentgateway.model.MasterCardTransaction;
-import com.pm.paymentgateway.repository.MasterCardRepository;
 import com.pm.paymentgateway.repository.MasterCardTransactionRepository;
-import com.pm.paymentgateway.service.MTrancsactionService;
+import com.pm.paymentgateway.service.MTransactionService;
+import com.pm.paymentgateway.service.TransactionService;
+import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Optional;
 
-public class MTransactionServiceImpl implements MTrancsactionService {
+@Service
+public class MTransactionServiceImpl implements TransactionService<MasterCardTransaction> {
     
     MasterCardTransactionRepository masterCardTransactionRepository;
 

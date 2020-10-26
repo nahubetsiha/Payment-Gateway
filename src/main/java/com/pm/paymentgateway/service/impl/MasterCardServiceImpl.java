@@ -4,8 +4,13 @@ import com.pm.paymentgateway.exception.EntityNotFoundException;
 import com.pm.paymentgateway.exception.InsufficientBalanceException;
 import com.pm.paymentgateway.model.MasterCard;
 import com.pm.paymentgateway.model.MasterCardTransaction;
+import com.pm.paymentgateway.model.Recipient;
 import com.pm.paymentgateway.repository.MasterCardRepository;
+import com.pm.paymentgateway.service.CardService;
+import com.pm.paymentgateway.service.MTransactionService;
 import com.pm.paymentgateway.service.MasterCardService;
+import com.pm.paymentgateway.service.RecipientService;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 
 import javax.validation.Valid;
@@ -14,25 +19,35 @@ import java.util.List;
 import java.util.Optional;
 
 @Service
-public class MasterCardServiceImpl implements MasterCardService {
+@Qualifier("masterCardService")
+public class MasterCardServiceImpl implements CardService<MasterCard, MasterCardTransaction> {
 
     MasterCardRepository masterCardRepository;
+    RecipientService recipientService;
+    MTransactionService mTransactionService;
 
-    public MasterCardServiceImpl(MasterCardRepository masterCardRepository){
+    public MasterCardServiceImpl(MasterCardRepository masterCardRepository, RecipientService recipientService, @Qualifier("MTransactionService") MTransactionService mTransactionService){
         this.masterCardRepository = masterCardRepository;
+        this.recipientService = recipientService;
+        this.mTransactionService = mTransactionService;
     }
+
 
     @Override
     public MasterCardTransaction processTransaction(MasterCard masterCard, double amount, Long recipientId){
-//        if(masterCard.getAvailableBalance()-amount < 0) throw new InsufficientBalanceException("Insufficient balance to complete transaction");
-//
-//        masterCard.setAvailableBalance(masterCard.getAvailableBalance()-amount);
-//        MasterCardTransaction masterCardTransaction = new MasterCardTransaction();
-//        masterCardTransaction.setCard(masterCard);
-//        masterCardTransaction.setChargedAmount(amount);
-//        masterCardTransaction.setDate(LocalDate.now());
-//        masterCardTransaction.setVendor("Shopping Cart");
-        return null;
+        if(masterCard.getAvailableBalance()-amount < 0) throw new InsufficientBalanceException("Insufficient balance to complete transaction");
+
+        Recipient recipient = recipientService.getRecipient(recipientId);
+
+        masterCard.setAvailableBalance(masterCard.getAvailableBalance()-amount);
+        MasterCardTransaction masterCardTransaction = new MasterCardTransaction();
+        masterCardTransaction.setCard(masterCard);
+        masterCardTransaction.setChargedAmount(amount);
+        masterCardTransaction.setDate(LocalDate.now());
+        masterCardTransaction.setRecipient(recipient);
+
+
+        return mTransactionService.addTransaction(masterCardTransaction);
 
     }
 

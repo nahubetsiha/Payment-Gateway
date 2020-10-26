@@ -5,6 +5,7 @@ import com.pm.paymentgateway.model.VisaTransaction;
 import com.pm.paymentgateway.model.VisaTransaction;
 import com.pm.paymentgateway.repository.VisaTransactionRepository;
 import com.pm.paymentgateway.repository.VisaTransactionRepository;
+import com.pm.paymentgateway.service.TransactionService;
 import com.pm.paymentgateway.service.VTransactionService;
 import org.springframework.stereotype.Service;
 
@@ -12,7 +13,7 @@ import java.util.List;
 import java.util.Optional;
 
 @Service
-public class VTransactionServiceImpl implements VTransactionService {
+public class VTransactionServiceImpl implements TransactionService<VisaTransaction> {
     VisaTransactionRepository visaTransactionRepository;
 
     public VTransactionServiceImpl(VisaTransactionRepository visaTransactionRepository){

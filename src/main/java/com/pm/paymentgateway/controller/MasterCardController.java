@@ -2,7 +2,11 @@ package com.pm.paymentgateway.controller;
 
 import com.pm.paymentgateway.exception.EntityNotFoundException;
 import com.pm.paymentgateway.model.MasterCard;
+import com.pm.paymentgateway.service.CardService;
+import com.pm.paymentgateway.service.MTransactionService;
 import com.pm.paymentgateway.service.MasterCardService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -17,9 +21,9 @@ import java.util.Optional;
 @RequestMapping("api/mastercard")
 public class MasterCardController {
 
-    MasterCardService masterCardService;
+    CardService<MasterCard, MTransactionService> masterCardService;
 
-    public MasterCardController(MasterCardService masterCardService){
+    public MasterCardController(@Qualifier("masterCardService") CardService masterCardService){
         this.masterCardService = masterCardService;
     }
 

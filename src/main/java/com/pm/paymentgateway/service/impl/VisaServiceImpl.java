@@ -1,21 +1,51 @@
 package com.pm.paymentgateway.service.impl;
 
 import com.pm.paymentgateway.exception.EntityNotFoundException;
-import com.pm.paymentgateway.model.Visa;
+import com.pm.paymentgateway.exception.InsufficientBalanceException;
+import com.pm.paymentgateway.model.*;
 import com.pm.paymentgateway.repository.VisaRepository;
+import com.pm.paymentgateway.service.CardService;
+import com.pm.paymentgateway.service.RecipientService;
+import com.pm.paymentgateway.service.VTransactionService;
 import com.pm.paymentgateway.service.VisaService;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 
 import javax.validation.Valid;
+import java.time.LocalDate;
 import java.util.List;
+import java.util.Optional;
 
 @Service
-public class VisaServiceImpl implements VisaService{
+@Qualifier("visaService")
+public class VisaServiceImpl implements CardService<Visa, VisaTransaction> {
 
     VisaRepository visaRepository;
+    VTransactionService vTransactionService;
+    RecipientService recipientService;
 
-    public VisaServiceImpl(VisaRepository visaRepository){
+    public VisaServiceImpl(VisaRepository visaRepository, RecipientService recipientService, @Qualifier("VTransactionService") VTransactionService vTransactionService){
         this.visaRepository = visaRepository;
+        this.vTransactionService = vTransactionService;
+        this.recipientService = recipientService;
+    }
+
+    @Override
+    public VisaTransaction processTransaction(Visa visa, double amount, Long recipientId){
+        if(visa.getAvailableBalance()-amount < 0) throw new InsufficientBalanceException("Insufficient balance to complete transaction");
+
+        Recipient recipient = recipientService.getRecipient(recipientId);
+
+        visa.setAvailableBalance(visa.getAvailableBalance()-amount);
+        VisaTransaction visaTransaction = new VisaTransaction();
+        visaTransaction.setCard(visa);
+        visaTransaction.setChargedAmount(amount);
+        visaTransaction.setDate(LocalDate.now());
+        visaTransaction.setRecipient(recipient);
+
+
+        return vTransactionService.addTransaction(visaTransaction);
+
     }
 
     @Override
@@ -29,11 +59,11 @@ public class VisaServiceImpl implements VisaService{
     }
 
     @Override
-    public Visa getCard(Long cardId) {
+    public Optional<Visa> getCard(Long cardId) {
         Visa visa = visaRepository.getOne(cardId);
         if(visa == null) throw new EntityNotFoundException(Visa.class, cardId);
 
-        return visa;
+        return visaRepository.findById(cardId);
     }
 
     @Override
