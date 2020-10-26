@@ -2,11 +2,8 @@ package com.pm.paymentgateway.service.impl;
 
 import com.pm.paymentgateway.exception.EntityNotFoundException;
 import com.pm.paymentgateway.model.VisaTransaction;
-import com.pm.paymentgateway.model.VisaTransaction;
-import com.pm.paymentgateway.repository.VisaTransactionRepository;
 import com.pm.paymentgateway.repository.VisaTransactionRepository;
 import com.pm.paymentgateway.service.TransactionService;
-import com.pm.paymentgateway.service.VTransactionService;
 import org.springframework.stereotype.Service;
 
 import java.util.List;

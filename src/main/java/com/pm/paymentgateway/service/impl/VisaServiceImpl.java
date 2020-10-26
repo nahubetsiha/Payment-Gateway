@@ -1,13 +1,12 @@
 package com.pm.paymentgateway.service.impl;
 
 import com.pm.paymentgateway.exception.EntityNotFoundException;
-import com.pm.paymentgateway.exception.InsufficientBalanceException;
+import com.pm.paymentgateway.exception.InvalidPaymentException;
 import com.pm.paymentgateway.model.*;
 import com.pm.paymentgateway.repository.VisaRepository;
 import com.pm.paymentgateway.service.CardService;
 import com.pm.paymentgateway.service.RecipientService;
-import com.pm.paymentgateway.service.VTransactionService;
-import com.pm.paymentgateway.service.VisaService;
+import com.pm.paymentgateway.service.TransactionService;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 
@@ -21,10 +20,11 @@ import java.util.Optional;
 public class VisaServiceImpl implements CardService<Visa, VisaTransaction> {
 
     VisaRepository visaRepository;
-    VTransactionService vTransactionService;
+    TransactionService<VisaTransaction> vTransactionService;
     RecipientService recipientService;
 
-    public VisaServiceImpl(VisaRepository visaRepository, RecipientService recipientService, @Qualifier("VTransactionService") VTransactionService vTransactionService){
+    public VisaServiceImpl(VisaRepository visaRepository, RecipientService recipientService,
+                           @Qualifier("VTransactionServiceImpl") TransactionService<VisaTransaction> vTransactionService){
         this.visaRepository = visaRepository;
         this.vTransactionService = vTransactionService;
         this.recipientService = recipientService;
@@ -32,11 +32,12 @@ public class VisaServiceImpl implements CardService<Visa, VisaTransaction> {
 
     @Override
     public VisaTransaction processTransaction(Visa visa, double amount, Long recipientId){
-        if(visa.getAvailableBalance()-amount < 0) throw new InsufficientBalanceException("Insufficient balance to complete transaction");
+        if(visa.getAvailableBalance()-amount < 0) throw new InvalidPaymentException("Insufficient balance to complete transaction");
 
         Recipient recipient = recipientService.getRecipient(recipientId);
 
         visa.setAvailableBalance(visa.getAvailableBalance()-amount);
+        recipient.setBalance(recipient.getBalance()+amount);
         VisaTransaction visaTransaction = new VisaTransaction();
         visaTransaction.setCard(visa);
         visaTransaction.setChargedAmount(amount);

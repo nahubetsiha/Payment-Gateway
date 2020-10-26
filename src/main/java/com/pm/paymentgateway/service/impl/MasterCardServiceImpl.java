@@ -1,15 +1,14 @@
 package com.pm.paymentgateway.service.impl;
 
 import com.pm.paymentgateway.exception.EntityNotFoundException;
-import com.pm.paymentgateway.exception.InsufficientBalanceException;
+import com.pm.paymentgateway.exception.InvalidPaymentException;
 import com.pm.paymentgateway.model.MasterCard;
 import com.pm.paymentgateway.model.MasterCardTransaction;
 import com.pm.paymentgateway.model.Recipient;
 import com.pm.paymentgateway.repository.MasterCardRepository;
 import com.pm.paymentgateway.service.CardService;
-import com.pm.paymentgateway.service.MTransactionService;
-import com.pm.paymentgateway.service.MasterCardService;
 import com.pm.paymentgateway.service.RecipientService;
+import com.pm.paymentgateway.service.TransactionService;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 
@@ -24,9 +23,10 @@ public class MasterCardServiceImpl implements CardService<MasterCard, MasterCard
 
     MasterCardRepository masterCardRepository;
     RecipientService recipientService;
-    MTransactionService mTransactionService;
+    TransactionService<MasterCardTransaction> mTransactionService;
 
-    public MasterCardServiceImpl(MasterCardRepository masterCardRepository, RecipientService recipientService, @Qualifier("MTransactionService") MTransactionService mTransactionService){
+    public MasterCardServiceImpl(MasterCardRepository masterCardRepository, RecipientService recipientService,
+                                 @Qualifier("MTransactionServiceImpl") TransactionService<MasterCardTransaction> mTransactionService){
         this.masterCardRepository = masterCardRepository;
         this.recipientService = recipientService;
         this.mTransactionService = mTransactionService;
@@ -35,11 +35,12 @@ public class MasterCardServiceImpl implements CardService<MasterCard, MasterCard
 
     @Override
     public MasterCardTransaction processTransaction(MasterCard masterCard, double amount, Long recipientId){
-        if(masterCard.getAvailableBalance()-amount < 0) throw new InsufficientBalanceException("Insufficient balance to complete transaction");
+        if(masterCard.getAvailableBalance()-amount < 0) throw new InvalidPaymentException("Insufficient balance to complete transaction");
 
         Recipient recipient = recipientService.getRecipient(recipientId);
 
         masterCard.setAvailableBalance(masterCard.getAvailableBalance()-amount);
+        recipient.setBalance(recipient.getBalance()+amount);
         MasterCardTransaction masterCardTransaction = new MasterCardTransaction();
         masterCardTransaction.setCard(masterCard);
         masterCardTransaction.setChargedAmount(amount);

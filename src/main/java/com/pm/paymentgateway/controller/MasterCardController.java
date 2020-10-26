@@ -2,32 +2,28 @@ package com.pm.paymentgateway.controller;
 
 import com.pm.paymentgateway.exception.EntityNotFoundException;
 import com.pm.paymentgateway.model.MasterCard;
+import com.pm.paymentgateway.model.MasterCardTransaction;
 import com.pm.paymentgateway.service.CardService;
-import com.pm.paymentgateway.service.MTransactionService;
-import com.pm.paymentgateway.service.MasterCardService;
-import org.springframework.beans.factory.annotation.Autowired;
+import com.pm.paymentgateway.service.TransactionService;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
 import java.util.List;
-import java.util.Optional;
 
 @RestController
 @RequestMapping("api/mastercard")
 public class MasterCardController {
 
-    CardService<MasterCard, MTransactionService> masterCardService;
+    CardService<MasterCard, TransactionService<MasterCardTransaction>> masterCardService;
 
     public MasterCardController(@Qualifier("masterCardService") CardService masterCardService){
         this.masterCardService = masterCardService;
     }
 
-    @GetMapping("getAll")
+    @GetMapping("/getAll")
     public ResponseEntity<List<MasterCard>> getAll(){
 
         try {
@@ -39,7 +35,7 @@ public class MasterCardController {
 //        return new ResponseEntity<>(masterCardService.getAllCards(), HttpStatus.OK);
     }
 
-    @GetMapping("get/{cardId}")
+    @GetMapping("/get/{cardId}")
     public ResponseEntity<MasterCard> getCardById(@PathVariable Long cardId){
 //        return new ResponseEntity<>(masterCardService.getCard(cardId), HttpStatus.OK);
         MasterCard masterCard = masterCardService.getCard(cardId)
@@ -49,5 +45,19 @@ public class MasterCardController {
 ////                .orElseThrow(()-> new EntityNotFoundException(MasterCard.class, cardId));
     }
 
+    @PostMapping("/add")
+    public ResponseEntity<MasterCard> addMasterCard(@RequestBody @Valid MasterCard recipient){
+        return new ResponseEntity<>(masterCardService.addCard(recipient), HttpStatus.OK);
+    }
+
+    @PutMapping("/edit/{cardId}")
+    public ResponseEntity<MasterCard> editMasterCard(@RequestBody @Valid MasterCard recipient, @PathVariable  Long cardId){
+        return new ResponseEntity<>(masterCardService.updateCard(recipient, cardId), HttpStatus.OK);
+    }
+
+    @DeleteMapping("/delete/{cardId}")
+    public ResponseEntity<Long> deleteMasterCard(@PathVariable Long cardId){
+        return new ResponseEntity<>(masterCardService.deleteCard(cardId), HttpStatus.OK);
+    }
 
 }

@@ -3,7 +3,6 @@ package com.pm.paymentgateway.service.impl;
 import com.pm.paymentgateway.exception.EntityNotFoundException;
 import com.pm.paymentgateway.model.MasterCardTransaction;
 import com.pm.paymentgateway.repository.MasterCardTransactionRepository;
-import com.pm.paymentgateway.service.MTransactionService;
 import com.pm.paymentgateway.service.TransactionService;
 import org.springframework.stereotype.Service;
 
