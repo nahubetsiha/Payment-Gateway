@@ -20,7 +20,7 @@ public class PaymentGateway {
         this.paymentGatewayService = paymentGatewayService;
     }
 
-    @PostMapping("/process-transaction/{recipientId}")
+    @PostMapping("/process-transaction")
     public <T> ResponseEntity<T> processTransaction(@RequestBody Order order){
 
         try {
