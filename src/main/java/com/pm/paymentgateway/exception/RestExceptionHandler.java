@@ -13,6 +13,8 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 import javax.persistence.EntityNotFoundException;
+
+import static org.springframework.http.HttpStatus.NOT_ACCEPTABLE;
 import static org.springframework.http.HttpStatus.NOT_FOUND;
 
 @Order(Ordered.HIGHEST_PRECEDENCE)
@@ -34,6 +36,13 @@ public class RestExceptionHandler extends ResponseEntityExceptionHandler {
     protected ResponseEntity<Object> handleEntityNotFound(
             EntityNotFoundException ex) {
         ApiError apiError = new ApiError(NOT_FOUND);
+        apiError.setMessage(ex.getMessage());
+        return buildResponseEntity(apiError);
+    }
+    @ExceptionHandler(InvalidPaymentException.class)
+    protected ResponseEntity<Object> handleEntityInvalidPayment(
+            InvalidPaymentException ex) {
+        ApiError apiError = new ApiError(NOT_ACCEPTABLE);
         apiError.setMessage(ex.getMessage());
         return buildResponseEntity(apiError);
     }
