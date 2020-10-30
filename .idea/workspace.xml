@@ -20,10 +20,9 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="4b6e4790-3d09-40fd-810c-d789b6a79592" name="Default Changelist" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/pm/paymentgateway/controller/PaymentGateway.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/pm/paymentgateway/controller/PaymentGateway.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/pm/paymentgateway/model/CardInformation.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/pm/paymentgateway/model/CardInformation.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/pm/paymentgateway/service/impl/PaymentGatewayService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/pm/paymentgateway/service/impl/PaymentGatewayService.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/pm/paymentgateway/model/CardType.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/pm/paymentgateway/model/MasterCard.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/pm/paymentgateway/model/MasterCard.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/pm/paymentgateway/model/Visa.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/pm/paymentgateway/model/Visa.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -36,9 +35,9 @@
   <component name="FileTemplateManagerImpl">
     <option name="RECENT_TEMPLATES">
       <list>
-        <option value="Enum" />
         <option value="Interface" />
         <option value="Class" />
+        <option value="Enum" />
       </list>
     </option>
   </component>
@@ -95,7 +94,7 @@
       <workItem from="1603682043876" duration="9405000" />
       <workItem from="1603725882195" duration="6551000" />
       <workItem from="1603732519258" duration="6771000" />
-      <workItem from="1604000568307" duration="14683000" />
+      <workItem from="1604000568307" duration="15331000" />
     </task>
     <servers />
   </component>

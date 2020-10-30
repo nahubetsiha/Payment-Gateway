@@ -22,4 +22,5 @@ public class Visa {
     private LocalDate expDate;
     private int pin;
     private double availableBalance;
+    private CardType cardType = CardType.VISA;
 }
