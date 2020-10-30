@@ -19,8 +19,8 @@ public class CardInformation {
     private Long cardNumber;
     private int pin;
     private String name;
-    @DateTimeFormat(pattern = "yyyy-MM-dd")
-    private LocalDate expDate;
+//    @DateTimeFormat(pattern = "yyyy-MM-dd")
+    private String expDate;
 //    private double availableBalance;
 
 }
