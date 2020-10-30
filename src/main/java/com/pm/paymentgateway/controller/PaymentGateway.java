@@ -2,6 +2,7 @@ package com.pm.paymentgateway.controller;
 
 import com.pm.paymentgateway.exception.InvalidPaymentException;
 import com.pm.paymentgateway.model.CardInformation;
+import com.pm.paymentgateway.model.Order;
 import com.pm.paymentgateway.service.impl.PaymentGatewayService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -9,6 +10,7 @@ import org.springframework.web.bind.annotation.*;
 
 
 @RestController
+@CrossOrigin(allowedHeaders = "*")
 @RequestMapping("api/payment")
 public class PaymentGateway {
 
@@ -19,10 +21,10 @@ public class PaymentGateway {
     }
 
     @PostMapping("/process-transaction/{recipientId}")
-    public <T> ResponseEntity<T> processTransaction(@RequestBody CardInformation card, double amount, @PathVariable Long recipientId){
+    public <T> ResponseEntity<T> processTransaction(@RequestBody Order order){
 
         try {
-            return new ResponseEntity<T>((T) paymentGatewayService.processTransaction(card, amount, recipientId), HttpStatus.OK);
+            return new ResponseEntity<T>((T) paymentGatewayService.processTransaction(order), HttpStatus.OK);
         } catch (InvalidPaymentException exception){
             throw new InvalidPaymentException("Payment Transaction failed");
         }

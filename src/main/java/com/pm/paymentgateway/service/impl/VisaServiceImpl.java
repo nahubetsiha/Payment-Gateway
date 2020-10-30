@@ -17,7 +17,7 @@ import java.util.Optional;
 
 @Service
 @Qualifier("visaService")
-public class VisaServiceImpl implements CardService<Visa, VisaTransaction> {
+public class VisaServiceImpl implements CardService<Visa> {
 
     VisaRepository visaRepository;
     TransactionService<VisaTransaction> vTransactionService;
@@ -31,21 +31,32 @@ public class VisaServiceImpl implements CardService<Visa, VisaTransaction> {
     }
 
     @Override
-    public VisaTransaction processTransaction(Visa visa, double amount, Long recipientId){
+    public Double processTransaction(Visa visa, List<PayTo> payTo){
+
+        int amount = 0;
+
+        for(PayTo p: payTo){
+            amount+=p.getAmount();
+        }
+
         if(visa.getAvailableBalance()-amount < 0) throw new InvalidPaymentException("Insufficient balance to complete transaction");
 
-        Recipient recipient = recipientService.getRecipient(recipientId);
+        for(PayTo p: payTo){
+            Recipient recipient = recipientService.getRecipientByAccountNo(p.getAccountNo());
 
-        visa.setAvailableBalance(visa.getAvailableBalance()-amount);
-        recipient.setBalance(recipient.getBalance()+amount);
-        VisaTransaction visaTransaction = new VisaTransaction();
-        visaTransaction.setCard(visa);
-        visaTransaction.setChargedAmount(amount);
-        visaTransaction.setDate(LocalDate.now());
-        visaTransaction.setRecipient(recipient);
+            visa.setAvailableBalance(visa.getAvailableBalance()-amount);
+            recipient.setBalance(recipient.getBalance()+amount);
+            VisaTransaction visaTransaction = new VisaTransaction();
+            visaTransaction.setCard(visa);
+            visaTransaction.setChargedAmount(amount);
+            visaTransaction.setDate(LocalDate.now());
+            visaTransaction.setRecipient(recipient);
 
 
-        return vTransactionService.addTransaction(visaTransaction);
+            vTransactionService.addTransaction(visaTransaction);
+        }
+
+        return visa.getAvailableBalance();
 
     }
 

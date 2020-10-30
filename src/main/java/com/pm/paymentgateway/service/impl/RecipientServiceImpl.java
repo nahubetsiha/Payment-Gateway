@@ -37,6 +37,11 @@ public class RecipientServiceImpl implements RecipientService {
     }
 
     @Override
+    public Recipient getRecipientByAccountNo(Long accountNo) {
+        return recipientRepository.getByAccountNo(accountNo);
+    }
+
+    @Override
     public Recipient addRecipient(@Valid Recipient recipient) {
         return recipientRepository.save(recipient);
     }

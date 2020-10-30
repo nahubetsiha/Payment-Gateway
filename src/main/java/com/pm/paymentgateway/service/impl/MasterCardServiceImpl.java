@@ -4,6 +4,7 @@ import com.pm.paymentgateway.exception.EntityNotFoundException;
 import com.pm.paymentgateway.exception.InvalidPaymentException;
 import com.pm.paymentgateway.model.MasterCard;
 import com.pm.paymentgateway.model.MasterCardTransaction;
+import com.pm.paymentgateway.model.PayTo;
 import com.pm.paymentgateway.model.Recipient;
 import com.pm.paymentgateway.repository.MasterCardRepository;
 import com.pm.paymentgateway.service.CardService;
@@ -19,7 +20,7 @@ import java.util.Optional;
 
 @Service
 @Qualifier("masterCardService")
-public class MasterCardServiceImpl implements CardService<MasterCard, MasterCardTransaction> {
+public class MasterCardServiceImpl implements CardService<MasterCard> {
 
     MasterCardRepository masterCardRepository;
     RecipientService recipientService;
@@ -34,22 +35,32 @@ public class MasterCardServiceImpl implements CardService<MasterCard, MasterCard
 
 
     @Override
-    public MasterCardTransaction processTransaction(MasterCard masterCard, double amount, Long recipientId){
+    public Double processTransaction(MasterCard masterCard, List<PayTo> payTo){
+
+        int amount = 0;
+
+        for(PayTo p: payTo){
+            amount+=p.getAmount();
+        }
+
         if(masterCard.getAvailableBalance()-amount < 0) throw new InvalidPaymentException("Insufficient balance to complete transaction");
 
-        Recipient recipient = recipientService.getRecipient(recipientId);
+        for(PayTo p: payTo){
+            Recipient recipient = recipientService.getRecipientByAccountNo(p.getAccountNo());
 
-        masterCard.setAvailableBalance(masterCard.getAvailableBalance()-amount);
-        recipient.setBalance(recipient.getBalance()+amount);
-        MasterCardTransaction masterCardTransaction = new MasterCardTransaction();
-        masterCardTransaction.setCard(masterCard);
-        masterCardTransaction.setChargedAmount(amount);
-        masterCardTransaction.setDate(LocalDate.now());
-        masterCardTransaction.setRecipient(recipient);
+            masterCard.setAvailableBalance(masterCard.getAvailableBalance()-amount);
+            recipient.setBalance(recipient.getBalance()+amount);
+            MasterCardTransaction masterCardTransaction = new MasterCardTransaction();
+            masterCardTransaction.setCard(masterCard);
+            masterCardTransaction.setChargedAmount(amount);
+            masterCardTransaction.setDate(LocalDate.now());
+            masterCardTransaction.setRecipient(recipient);
 
 
-        return mTransactionService.addTransaction(masterCardTransaction);
+             mTransactionService.addTransaction(masterCardTransaction);
+        }
 
+        return masterCard.getAvailableBalance();
     }
 
 

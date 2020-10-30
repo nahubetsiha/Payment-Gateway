@@ -14,9 +14,10 @@ import javax.validation.Valid;
 import java.util.List;
 
 @RestController
+@CrossOrigin(allowedHeaders = "*")
 @RequestMapping("api/visa")
 public class VisaController {
-    CardService<Visa, TransactionService<VisaTransaction>> visaService;
+    CardService<Visa> visaService;
 
     public VisaController(@Qualifier("visaService") CardService visaService){
         this.visaService = visaService;

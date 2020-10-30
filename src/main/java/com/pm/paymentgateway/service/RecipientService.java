@@ -9,6 +9,7 @@ import java.util.List;
 public interface RecipientService {
     List<Recipient> getAllRecipients();
     Recipient getRecipient(Long recipientId);
+    Recipient getRecipientByAccountNo(Long accountNo);
     Recipient addRecipient(Recipient recipient);
     Recipient updateRecipient(Recipient recipient, Long recipientId);
     Long deleteRecipient(Long recipientId);

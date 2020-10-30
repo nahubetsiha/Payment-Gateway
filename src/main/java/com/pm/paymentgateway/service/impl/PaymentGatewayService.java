@@ -7,6 +7,8 @@ import com.pm.paymentgateway.service.*;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @Service
 public class PaymentGatewayService {
 
@@ -26,11 +28,16 @@ public class PaymentGatewayService {
         this.vTransactionService = vTransactionService;
     }
 
-    public <T> T processTransaction(CardInformation card, double amount, Long recipientId){
+    public <T> T processTransaction(Order order){
+
+        CardInformation card = order.getCardInformation();
+        List<PayTo> payTo = order.getPayTo();
+
 
         if(card==null){
             throw new EntityNotFoundException(CardInformation.class);
         }
+
 
         Long ccNumber = card.getCardNumber();
         int length = String.valueOf(ccNumber).length();
@@ -46,7 +53,7 @@ public class PaymentGatewayService {
             masterCard.setCardNumber(card.getCardNumber());
             masterCard.setExpDate(card.getExpDate());
             masterCard.setAvailableBalance(card.getAvailableBalance());
-            return (T) masterCardService.processTransaction(masterCard, amount, recipientId);
+            return (T) masterCardService.processTransaction(masterCard, payTo);
 
         }
         else if (length==16 && firstDigit=='4'){
@@ -56,7 +63,7 @@ public class PaymentGatewayService {
             visa.setCardNumber(card.getCardNumber());
             visa.setExpDate(card.getExpDate());
             visa.setAvailableBalance(card.getAvailableBalance());
-            return  (T)  visaService.processTransaction(visa, amount, recipientId);
+            return  (T)  visaService.processTransaction(visa, payTo);
         }
         else throw new InvalidPaymentException("Payment Transaction failed");
     }

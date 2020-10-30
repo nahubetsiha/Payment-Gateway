@@ -14,10 +14,11 @@ import javax.validation.Valid;
 import java.util.List;
 
 @RestController
+@CrossOrigin(allowedHeaders = "*")
 @RequestMapping("api/mastercard")
 public class MasterCardController {
 
-    CardService<MasterCard, TransactionService<MasterCardTransaction>> masterCardService;
+    CardService<MasterCard> masterCardService;
 
     public MasterCardController(@Qualifier("masterCardService") CardService masterCardService){
         this.masterCardService = masterCardService;

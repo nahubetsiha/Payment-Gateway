@@ -10,6 +10,7 @@ import javax.validation.Valid;
 import java.util.List;
 
 @RestController
+@CrossOrigin(allowedHeaders = "*")
 @RequestMapping("api/recipient")
 public class RecipientController {
 
