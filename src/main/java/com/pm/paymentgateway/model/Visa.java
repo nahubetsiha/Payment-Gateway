@@ -18,7 +18,7 @@ public class Visa {
     private Long visaCardId;
     private Long cardNumber;
     private String name;
-    @DateTimeFormat(pattern = "yyyy-MM-dd")
+    @DateTimeFormat(pattern = "yyyy-MM")
     private LocalDate expDate;
     private int pin;
     private double availableBalance;
