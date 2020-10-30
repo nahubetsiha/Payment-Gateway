@@ -21,6 +21,6 @@ public class CardInformation {
     private String name;
     @DateTimeFormat(pattern = "yyyy-MM-dd")
     private LocalDate expDate;
-    private double availableBalance;
+//    private double availableBalance;
 
 }

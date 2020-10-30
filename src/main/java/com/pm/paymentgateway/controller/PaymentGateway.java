@@ -31,4 +31,14 @@ public class PaymentGateway {
 
     }
 
+    @PostMapping("/verify-card")
+    public <T> ResponseEntity<T> verifyCard(@RequestBody CardInformation cardInformation){
+
+        try {
+            return new ResponseEntity<T>((T) paymentGatewayService.verifyCard(cardInformation), HttpStatus.OK);
+        } catch (InvalidPaymentException exception){
+            throw new InvalidPaymentException("Card Not Accepted");
+        }
+
+    }
 }

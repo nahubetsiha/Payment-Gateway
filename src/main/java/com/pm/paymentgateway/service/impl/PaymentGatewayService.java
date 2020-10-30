@@ -52,7 +52,7 @@ public class PaymentGatewayService {
             masterCard.setPin(card.getPin());
             masterCard.setCardNumber(card.getCardNumber());
             masterCard.setExpDate(card.getExpDate());
-            masterCard.setAvailableBalance(card.getAvailableBalance());
+//            masterCard.setAvailableBalance(card.getAvailableBalance());
             return (T) masterCardService.processTransaction(masterCard, payTo);
 
         }
@@ -62,9 +62,43 @@ public class PaymentGatewayService {
             visa.setPin(card.getPin());
             visa.setCardNumber(card.getCardNumber());
             visa.setExpDate(card.getExpDate());
-            visa.setAvailableBalance(card.getAvailableBalance());
+//            visa.setAvailableBalance(card.getAvailableBalance());
             return  (T)  visaService.processTransaction(visa, payTo);
         }
         else throw new InvalidPaymentException("Payment Transaction failed");
+    }
+
+    public <T> T verifyCard(CardInformation card){
+        if(card==null){
+            throw new EntityNotFoundException(CardInformation.class);
+        }
+
+
+        Long ccNumber = card.getCardNumber();
+        int length = String.valueOf(ccNumber).length();
+        char firstDigit = String.valueOf(ccNumber).charAt(0);
+
+        System.out.println("credit card length: "+length + " first digit: "+firstDigit);
+        System.out.println(String.valueOf(ccNumber).charAt(0));
+
+        if(length==16 && firstDigit=='5'){
+            MasterCard masterCard = new MasterCard();
+            masterCard.setName(card.getName());
+            masterCard.setPin(card.getPin());
+            masterCard.setCardNumber(card.getCardNumber());
+            masterCard.setExpDate(card.getExpDate());
+            return (T)masterCard;
+
+        }
+        else if (length==16 && firstDigit=='4'){
+            Visa visa = new Visa();
+            visa.setName(card.getName());
+            visa.setPin(card.getPin());
+            visa.setCardNumber(card.getCardNumber());
+            visa.setExpDate(card.getExpDate());
+            return  (T) visa;
+        }
+        else throw new InvalidPaymentException("Card Not Accepted");
+
     }
 }
