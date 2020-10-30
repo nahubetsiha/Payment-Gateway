@@ -8,6 +8,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import java.time.LocalDate;
+import java.util.Date;
 
 @Entity
 @Data
@@ -18,8 +19,8 @@ public class Visa {
     private Long visaCardId;
     private Long cardNumber;
     private String name;
-    @DateTimeFormat(pattern = "yyyy-MM")
-    private LocalDate expDate;
+//    @DateTimeFormat(pattern = "yyyy-MM")
+    private String expDate;
     private int pin;
     private double availableBalance;
     private CardType cardType = CardType.VISA;
