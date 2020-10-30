@@ -16,4 +16,5 @@ public interface CardService<C>{
     C addCard(C masterCard);
     C updateCard(C masterCard, Long cardId);
     Long deleteCard(Long cardId);
+    C getByCardNumber(Long ccNum);
 }

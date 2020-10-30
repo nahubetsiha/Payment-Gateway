@@ -37,7 +37,7 @@ public class PaymentGateway {
         try {
             return new ResponseEntity<T>((T) paymentGatewayService.verifyCard(cardInformation), HttpStatus.OK);
         } catch (InvalidPaymentException exception){
-            throw new InvalidPaymentException("Card Not Accepted");
+            throw new InvalidPaymentException(exception.getMessage());
         }
 
     }

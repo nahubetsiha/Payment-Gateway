@@ -112,4 +112,9 @@ public class MasterCardServiceImpl implements CardService<MasterCard> {
         masterCardRepository.delete(masterCard);
         return cardId;
     }
+
+    @Override
+    public MasterCard getByCardNumber(Long ccNum) {
+        return masterCardRepository.getByCardNumber(ccNum);
+    }
 }

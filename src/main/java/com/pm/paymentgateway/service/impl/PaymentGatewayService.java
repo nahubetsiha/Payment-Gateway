@@ -18,7 +18,7 @@ public class PaymentGatewayService {
     TransactionService<MasterCardTransaction> mTransactionService;
     TransactionService<VisaTransaction> vTransactionService;
 
-    public PaymentGatewayService(@Qualifier("masterCardService") CardService masterCardService, @Qualifier("visaService") CardService visaService,
+    public PaymentGatewayService(@Qualifier("masterCardService") CardService<MasterCard> masterCardService, @Qualifier("visaService") CardService<Visa> visaService,
                                  RecipientService recipientService, @Qualifier("MTransactionServiceImpl") TransactionService<MasterCardTransaction> mTransactionService,
                                  @Qualifier("VTransactionServiceImpl") TransactionService<VisaTransaction> vTransactionService){
         this.masterCardService = masterCardService;
@@ -82,7 +82,8 @@ public class PaymentGatewayService {
         System.out.println(String.valueOf(ccNumber).charAt(0));
 
         if(length==16 && firstDigit=='5'){
-            MasterCard masterCard = new MasterCard();
+            MasterCard masterCard = (MasterCard) masterCardService.getByCardNumber(ccNumber);
+            if(masterCard==null) throw new InvalidPaymentException("Card Not Found");
             masterCard.setName(card.getName());
             masterCard.setPin(card.getPin());
             masterCard.setCardNumber(card.getCardNumber());
@@ -91,7 +92,8 @@ public class PaymentGatewayService {
 
         }
         else if (length==16 && firstDigit=='4'){
-            Visa visa = new Visa();
+            Visa visa = (Visa) visaService.getByCardNumber(ccNumber);
+            if(visa==null) throw new InvalidPaymentException("Card Not Found");
             visa.setName(card.getName());
             visa.setPin(card.getPin());
             visa.setCardNumber(card.getCardNumber());

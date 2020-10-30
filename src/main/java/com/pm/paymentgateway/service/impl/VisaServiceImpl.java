@@ -106,4 +106,9 @@ public class VisaServiceImpl implements CardService<Visa> {
         visaRepository.delete(visa);
         return cardId;
     }
+
+    @Override
+    public Visa getByCardNumber(Long ccNum) {
+        return visaRepository.getByCardNumber(ccNum);
+    }
 }
