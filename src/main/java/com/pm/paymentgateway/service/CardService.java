@@ -10,7 +10,7 @@ import java.util.Optional;
 
 @Service
 public interface CardService<C>{
-    Double processTransaction(C card, List<PayTo> payTo);
+    void processTransaction(C card, List<PayTo> payTo);
     List<C> getAllCards();
     Optional<C> getCard(Long cardId);
     C addCard(C masterCard);

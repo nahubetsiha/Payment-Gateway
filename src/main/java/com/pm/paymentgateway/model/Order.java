@@ -12,7 +12,7 @@ public class Order {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     @OneToOne(cascade = CascadeType.ALL)
-    private CardInformation cardInformation;
+    private CardInformation cardInfo;
     @OneToMany(cascade = CascadeType.ALL)
     private List<PayTo> payTo;
     private Long orderId;

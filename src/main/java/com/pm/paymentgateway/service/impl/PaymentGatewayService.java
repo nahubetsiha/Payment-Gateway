@@ -5,6 +5,8 @@ import com.pm.paymentgateway.exception.InvalidPaymentException;
 import com.pm.paymentgateway.model.*;
 import com.pm.paymentgateway.service.*;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.kafka.annotation.KafkaListener;
+import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -28,9 +30,10 @@ public class PaymentGatewayService {
         this.vTransactionService = vTransactionService;
     }
 
-    public <T> T processTransaction(Order order){
+    @KafkaListener(groupId = "order", topics = "Order-Created")
+    public Order processTransaction(Order order){
 
-        CardInformation card = order.getCardInformation();
+        CardInformation card = order.getCardInfo();
         List<PayTo> payTo = order.getPayTo();
 
 
@@ -52,8 +55,10 @@ public class PaymentGatewayService {
             masterCard.setPin(card.getPin());
             masterCard.setCardNumber(card.getCardNumber());
             masterCard.setExpDate(card.getExpDate());
+            masterCard.setCardType(CardType.MASTERCARD);
 //            masterCard.setAvailableBalance(card.getAvailableBalance());
-            return (T) masterCardService.processTransaction(masterCard, payTo);
+
+            masterCardService.processTransaction(masterCard, payTo);
 
         }
         else if (length==16 && firstDigit=='4'){
@@ -62,10 +67,26 @@ public class PaymentGatewayService {
             visa.setPin(card.getPin());
             visa.setCardNumber(card.getCardNumber());
             visa.setExpDate(card.getExpDate());
+            visa.setCardType(CardType.VISA);
 //            visa.setAvailableBalance(card.getAvailableBalance());
-            return  (T)  visaService.processTransaction(visa, payTo);
+
+            visaService.processTransaction(visa, payTo);
         }
         else throw new InvalidPaymentException("Payment Transaction failed");
+
+        KafkaTemplate<Object, Object> producer;
+
+        ProductDto productDto = new ProductDto();
+        productDto.setOrderId(order.getOrderId());
+
+        for(PayTo p: order.getPayTo()){
+            Product product = new Product();
+            product.setProductId(p.getProductId());
+            product.setQuantity(p.getQuantity());
+            productDto.getProducts().add(product);
+        }
+        producer.send("Test",productDto);
+        return order;
     }
 
     public <T> T verifyCard(CardInformation card){

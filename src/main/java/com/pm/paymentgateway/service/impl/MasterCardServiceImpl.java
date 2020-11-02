@@ -11,6 +11,7 @@ import com.pm.paymentgateway.service.CardService;
 import com.pm.paymentgateway.service.RecipientService;
 import com.pm.paymentgateway.service.TransactionService;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.kafka.annotation.KafkaListener;
 import org.springframework.stereotype.Service;
 
 import javax.validation.Valid;
@@ -35,7 +36,7 @@ public class MasterCardServiceImpl implements CardService<MasterCard> {
 
 
     @Override
-    public Double processTransaction(MasterCard masterCard, List<PayTo> payTo){
+    public void processTransaction(MasterCard masterCard, List<PayTo> payTo){
 
         int amount = 0;
 
@@ -46,7 +47,7 @@ public class MasterCardServiceImpl implements CardService<MasterCard> {
         if(masterCard.getAvailableBalance()-amount < 0) throw new InvalidPaymentException("Insufficient balance to complete transaction");
 
         for(PayTo p: payTo){
-            Recipient recipient = recipientService.getRecipientByAccountNo(p.getAccountNo());
+            Recipient recipient = recipientService.getRecipientByAccountNo(p.getAccountNumber());
 
             masterCard.setAvailableBalance(masterCard.getAvailableBalance()-amount);
             recipient.setBalance(recipient.getBalance()+amount);
@@ -60,7 +61,7 @@ public class MasterCardServiceImpl implements CardService<MasterCard> {
              mTransactionService.addTransaction(masterCardTransaction);
         }
 
-        return masterCard.getAvailableBalance();
+//        return masterCard.getAvailableBalance();
     }
 
 
