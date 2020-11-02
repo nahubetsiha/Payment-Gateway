@@ -31,7 +31,7 @@ public class VisaServiceImpl implements CardService<Visa> {
     }
 
     @Override
-    public Double processTransaction(Visa visa, List<PayTo> payTo){
+    public void processTransaction(Visa visa, List<PayTo> payTo){
 
         int amount = 0;
 
@@ -56,7 +56,7 @@ public class VisaServiceImpl implements CardService<Visa> {
             vTransactionService.addTransaction(visaTransaction);
         }
 
-        return visa.getAvailableBalance();
+//        return visa.getAvailableBalance();
 
     }
 
