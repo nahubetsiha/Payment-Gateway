@@ -45,7 +45,7 @@ public class PaymentGatewayService {
         }
 
 
-        Long ccNumber = card.getCardNumber();
+        String ccNumber = card.getCardNumber();
         int length = String.valueOf(ccNumber).length();
         char firstDigit = String.valueOf(ccNumber).charAt(0);
 
@@ -98,12 +98,12 @@ public class PaymentGatewayService {
         }
 
 
-        Long ccNumber = card.getCardNumber();
-        int length = String.valueOf(ccNumber).length();
-        char firstDigit = String.valueOf(ccNumber).charAt(0);
+        String ccNumber = card.getCardNumber();
+        int length = ccNumber.length();
+        char firstDigit = ccNumber.charAt(0);
 
-        System.out.println("credit card length: "+length + " first digit: "+firstDigit);
-        System.out.println(String.valueOf(ccNumber).charAt(0));
+//        System.out.println("credit card length: "+length + " first digit: "+firstDigit);
+//        System.out.println(String.valueOf(ccNumber).charAt(0));
 
         if(length==16 && firstDigit=='5'){
             MasterCard masterCard = (MasterCard) masterCardService.getByCardNumber(ccNumber);

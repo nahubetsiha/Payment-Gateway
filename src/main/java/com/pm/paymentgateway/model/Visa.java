@@ -17,11 +17,11 @@ public class Visa {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long visaCardId;
-    private Long cardNumber;
+    private String cardNumber;
     private String name;
 //    @DateTimeFormat(pattern = "yyyy-MM")
     private String expDate;
-    private int pin;
+    private String pin;
     private double availableBalance;
     private CardType cardType = CardType.VISA;
 }

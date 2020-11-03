@@ -115,7 +115,7 @@ public class MasterCardServiceImpl implements CardService<MasterCard> {
     }
 
     @Override
-    public MasterCard getByCardNumber(Long ccNum) {
+    public MasterCard getByCardNumber(String ccNum) {
         return masterCardRepository.getByCardNumber(ccNum);
     }
 }

@@ -108,7 +108,7 @@ public class VisaServiceImpl implements CardService<Visa> {
     }
 
     @Override
-    public Visa getByCardNumber(Long ccNum) {
+    public Visa getByCardNumber(String ccNum) {
         return visaRepository.getByCardNumber(ccNum);
     }
 }
