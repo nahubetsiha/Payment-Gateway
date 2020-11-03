@@ -3,6 +3,7 @@ package com.pm.paymentgateway.service.impl;
 import com.pm.paymentgateway.exception.EntityNotFoundException;
 import com.pm.paymentgateway.exception.InvalidPaymentException;
 import com.pm.paymentgateway.model.*;
+import com.pm.paymentgateway.repository.OrderRepository;
 import com.pm.paymentgateway.service.*;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.kafka.annotation.KafkaListener;
@@ -19,15 +20,17 @@ public class PaymentGatewayService {
     RecipientService recipientService;
     TransactionService<MasterCardTransaction> mTransactionService;
     TransactionService<VisaTransaction> vTransactionService;
+    OrderRepository orderRepository;
 
     public PaymentGatewayService(@Qualifier("masterCardService") CardService<MasterCard> masterCardService, @Qualifier("visaService") CardService<Visa> visaService,
                                  RecipientService recipientService, @Qualifier("MTransactionServiceImpl") TransactionService<MasterCardTransaction> mTransactionService,
-                                 @Qualifier("VTransactionServiceImpl") TransactionService<VisaTransaction> vTransactionService){
+                                 @Qualifier("VTransactionServiceImpl") TransactionService<VisaTransaction> vTransactionService, OrderRepository orderRepository){
         this.masterCardService = masterCardService;
         this.visaService = visaService;
         this.recipientService = recipientService;
         this.mTransactionService = mTransactionService;
         this.vTransactionService = vTransactionService;
+        this.orderRepository = orderRepository;
     }
 
     @KafkaListener(groupId = "order", topics = "Order-Created")

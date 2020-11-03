@@ -13,8 +13,9 @@ public class MasterCardTransaction{
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long transactionId;
+    private Long masterTransactionId;
     @ManyToOne(cascade = CascadeType.PERSIST)
+    @JoinColumn
     private MasterCard card;
     private double chargedAmount;
     @DateTimeFormat(pattern = "yyyy-MM-dd")
