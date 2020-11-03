@@ -16,11 +16,11 @@ public class CardInformation {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long cardId;
-    private Long cardNumber;
-    private int pin;
+    private Long cardNumber;//string
+    private int pin;//string
     private String name;
 //    @DateTimeFormat(pattern = "yyyy-MM-dd")
-    private String expDate;
+    private String expDate;//string
 //    private double availableBalance;
 
 }

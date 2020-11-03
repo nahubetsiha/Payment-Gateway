@@ -12,7 +12,7 @@ public class PayTo {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private Long accountNumber;
-    private double amount;
+    private double price ;
     private Long productId;
     private int quantity;
 }

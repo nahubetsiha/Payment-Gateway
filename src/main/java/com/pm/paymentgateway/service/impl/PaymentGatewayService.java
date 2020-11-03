@@ -85,7 +85,7 @@ public class PaymentGatewayService {
             product.setQuantity(p.getQuantity());
             productDto.getProducts().add(product);
         }
-        producer.send("Test",productDto);
+//        producer.send("Test",productDto);
         return order;
     }
 
@@ -105,6 +105,7 @@ public class PaymentGatewayService {
         if(length==16 && firstDigit=='5'){
             MasterCard masterCard = (MasterCard) masterCardService.getByCardNumber(ccNumber);
             if(masterCard==null) throw new InvalidPaymentException("Card Not Found");
+
             masterCard.setName(card.getName());
             masterCard.setPin(card.getPin());
             masterCard.setCardNumber(card.getCardNumber());
@@ -115,6 +116,7 @@ public class PaymentGatewayService {
         else if (length==16 && firstDigit=='4'){
             Visa visa = (Visa) visaService.getByCardNumber(ccNumber);
             if(visa==null) throw new InvalidPaymentException("Card Not Found");
+
             visa.setName(card.getName());
             visa.setPin(card.getPin());
             visa.setCardNumber(card.getCardNumber());
