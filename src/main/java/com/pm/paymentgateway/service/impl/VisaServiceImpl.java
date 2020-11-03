@@ -36,7 +36,7 @@ public class VisaServiceImpl implements CardService<Visa> {
         int amount = 0;
 
         for(PayTo p: payTo){
-            amount+=p.getAmount();
+            amount+=p.getPrice();
         }
 
         if(visa.getAvailableBalance()-amount < 0) throw new InvalidPaymentException("Insufficient balance to complete transaction");

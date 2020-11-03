@@ -41,7 +41,7 @@ public class MasterCardServiceImpl implements CardService<MasterCard> {
         int amount = 0;
 
         for(PayTo p: payTo){
-            amount+=p.getAmount();
+            amount+=p.getPrice();
         }
 
         if(masterCard.getAvailableBalance()-amount < 0) throw new InvalidPaymentException("Insufficient balance to complete transaction");
