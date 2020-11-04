@@ -18,7 +18,7 @@ import java.util.Map;
 
 @EnableKafka
 @Configuration
-public class KafkaConfig {
+public class KafkaConfig extends JsonDeserializer{
 
 
 
