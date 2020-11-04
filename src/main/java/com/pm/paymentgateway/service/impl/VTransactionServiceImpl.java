@@ -43,7 +43,7 @@ public class VTransactionServiceImpl implements TransactionService<VisaTransacti
                     transactionToUpdate.setDate(visaTransaction.getDate());
                     transactionToUpdate.setChargedAmount(visaTransaction.getChargedAmount());
                     transactionToUpdate.setCard(visaTransaction.getCard());
-                    transactionToUpdate.setRecipient(visaTransaction.getRecipient());
+//                    transactionToUpdate.setRecipient(visaTransaction.getRecipient());
 
                     return transactionToUpdate;
                 }).orElseThrow(() -> new EntityNotFoundException(VisaTransaction.class, transactionId));

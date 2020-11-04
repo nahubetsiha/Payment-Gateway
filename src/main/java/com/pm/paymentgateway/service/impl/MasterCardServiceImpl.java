@@ -47,15 +47,15 @@ public class MasterCardServiceImpl implements CardService<MasterCard> {
         if(masterCard.getAvailableBalance()-amount < 0) throw new InvalidPaymentException("Insufficient balance to complete transaction");
 
         for(PayTo p: payTo){
-            Recipient recipient = recipientService.getRecipientByAccountNo(p.getAccountNumber());
+//            Recipient recipient = recipientService.getRecipientByAccountNo(p.getAccountNumber());
 
             masterCard.setAvailableBalance(masterCard.getAvailableBalance()-amount);
-            recipient.setBalance(recipient.getBalance()+amount);
+//            recipient.setBalance(recipient.getBalance()+amount);
             MasterCardTransaction masterCardTransaction = new MasterCardTransaction();
             masterCardTransaction.setCard(masterCard);
             masterCardTransaction.setChargedAmount(amount);
             masterCardTransaction.setDate(LocalDate.now());
-            masterCardTransaction.setRecipient(recipient);
+//            masterCardTransaction.setRecipient(recipient);
 
 
              mTransactionService.addTransaction(masterCardTransaction);

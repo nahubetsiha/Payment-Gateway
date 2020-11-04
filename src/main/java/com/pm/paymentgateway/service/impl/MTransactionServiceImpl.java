@@ -44,7 +44,7 @@ public class MTransactionServiceImpl implements TransactionService<MasterCardTra
                     transactionToUpdate.setDate(masterCardTransaction.getDate());
                     transactionToUpdate.setChargedAmount(masterCardTransaction.getChargedAmount());
                     transactionToUpdate.setCard(masterCardTransaction.getCard());
-                    transactionToUpdate.setRecipient(masterCardTransaction.getRecipient());
+//                    transactionToUpdate.setRecipient(masterCardTransaction.getRecipient());
 
                     return transactionToUpdate;
                 }).orElseThrow(() -> new EntityNotFoundException(MasterCardTransaction.class, transactionId));

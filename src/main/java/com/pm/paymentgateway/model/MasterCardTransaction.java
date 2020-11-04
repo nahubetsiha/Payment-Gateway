@@ -20,7 +20,7 @@ public class MasterCardTransaction{
     private double chargedAmount;
     @DateTimeFormat(pattern = "yyyy-MM-dd")
     private LocalDate date;
-    @ManyToOne(cascade = CascadeType.ALL)
-    @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
-    private Recipient recipient;
+//    @ManyToOne(cascade = CascadeType.ALL)
+//    @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
+//    private Recipient recipient;
 }

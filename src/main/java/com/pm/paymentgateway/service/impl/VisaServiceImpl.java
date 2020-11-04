@@ -42,15 +42,15 @@ public class VisaServiceImpl implements CardService<Visa> {
         if(visa.getAvailableBalance()-amount < 0) throw new InvalidPaymentException("Insufficient balance to complete transaction");
 
         for(PayTo p: payTo){
-            Recipient recipient = recipientService.getRecipientByAccountNo(p.getAccountNumber());
+//            Recipient recipient = recipientService.getRecipientByAccountNo(p.getAccountNumber());
 
             visa.setAvailableBalance(visa.getAvailableBalance()-amount);
-            recipient.setBalance(recipient.getBalance()+amount);
+//            recipient.setBalance(recipient.getBalance()+amount);
             VisaTransaction visaTransaction = new VisaTransaction();
             visaTransaction.setCard(visa);
             visaTransaction.setChargedAmount(amount);
             visaTransaction.setDate(LocalDate.now());
-            visaTransaction.setRecipient(recipient);
+//            visaTransaction.setRecipient(recipient);
 
 
             vTransactionService.addTransaction(visaTransaction);
