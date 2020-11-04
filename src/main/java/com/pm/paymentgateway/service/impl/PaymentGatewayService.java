@@ -57,24 +57,24 @@ public class PaymentGatewayService {
         System.out.println(String.valueOf(ccNumber).charAt(0));
 
         if(length==16 && firstDigit=='5'){
-            MasterCard masterCard = new MasterCard();
-            masterCard.setName(card.getName());
-            masterCard.setPin(card.getPin());
-            masterCard.setCardNumber(card.getCardNumber());
-            masterCard.setExpDate(card.getExpDate());
-            masterCard.setCardType(CardType.MASTERCARD);
+            MasterCard masterCard = (MasterCard) masterCardService.getByCardNumber(ccNumber);
+//            masterCard.setName(card.getName());
+//            masterCard.setPin(card.getPin());
+//            masterCard.setCardNumber(card.getCardNumber());
+//            masterCard.setExpDate(card.getExpDate());
+//            masterCard.setCardType(CardType.MASTERCARD);
 //            masterCard.setAvailableBalance(card.getAvailableBalance());
 
             masterCardService.processTransaction(masterCard, payTo);
 
         }
         else if (length==16 && firstDigit=='4'){
-            Visa visa = new Visa();
-            visa.setName(card.getName());
-            visa.setPin(card.getPin());
-            visa.setCardNumber(card.getCardNumber());
-            visa.setExpDate(card.getExpDate());
-            visa.setCardType(CardType.VISA);
+            Visa visa = (Visa) visaService.getByCardNumber(ccNumber);
+//            visa.setName(card.getName());
+//            visa.setPin(card.getPin());
+//            visa.setCardNumber(card.getCardNumber());
+//            visa.setExpDate(card.getExpDate());
+//            visa.setCardType(CardType.VISA);
 //            visa.setAvailableBalance(card.getAvailableBalance());
 
             visaService.processTransaction(visa, payTo);
