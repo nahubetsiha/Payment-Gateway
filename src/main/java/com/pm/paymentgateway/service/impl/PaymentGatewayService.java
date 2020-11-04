@@ -5,6 +5,7 @@ import com.pm.paymentgateway.exception.InvalidPaymentException;
 import com.pm.paymentgateway.model.*;
 import com.pm.paymentgateway.repository.OrderRepository;
 import com.pm.paymentgateway.service.*;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.kafka.annotation.KafkaListener;
 import org.springframework.kafka.core.KafkaTemplate;
@@ -14,6 +15,9 @@ import java.util.List;
 
 @Service
 public class PaymentGatewayService {
+
+    @Autowired
+    private KafkaTemplate<String, ProductDto> producer;
 
     CardService masterCardService;
     CardService visaService;
@@ -33,7 +37,7 @@ public class PaymentGatewayService {
         this.orderRepository = orderRepository;
     }
 
-    @KafkaListener(groupId = "order", topics = "Order-Created")
+//    @KafkaListener(groupId = "order", topics = "Order-Created")
     public Order processTransaction(Order order){
 
         CardInformation card = order.getCardInfo();
@@ -77,7 +81,7 @@ public class PaymentGatewayService {
         }
         else throw new InvalidPaymentException("Payment Transaction failed");
 
-        KafkaTemplate<Object, Object> producer;
+//        KafkaTemplate<String, ProductDto> producer;
 
         ProductDto productDto = new ProductDto();
         productDto.setOrderId(order.getOrderId());
@@ -88,8 +92,8 @@ public class PaymentGatewayService {
             product.setQuantity(p.getQuantity());
             productDto.getProducts().add(product);
         }
-//        producer.send("Test",productDto);
-        return order;
+        producer.send("Payment-Being-Paid",productDto);
+        return orderRepository.save(order);
     }
 
     public <T> T verifyCard(CardInformation card){
