@@ -4,6 +4,7 @@ import com.pm.paymentgateway.exception.EntityNotFoundException;
 import com.pm.paymentgateway.exception.InvalidPaymentException;
 import com.pm.paymentgateway.model.*;
 //import com.pm.paymentgateway.repository.OrderRepository;
+import com.pm.paymentgateway.repository.OrderRepository;
 import com.pm.paymentgateway.service.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -17,24 +18,24 @@ import java.util.List;
 public class PaymentGatewayService {
 
     @Autowired
-    private KafkaTemplate<String, ProductDto> producer;
+    private KafkaTemplate<Object, Object> producer;
 
     CardService masterCardService;
     CardService visaService;
 //    RecipientService recipientService;
     TransactionService<MasterCardTransaction> mTransactionService;
     TransactionService<VisaTransaction> vTransactionService;
-//    OrderRepository orderRepository;
+    OrderRepository orderRepository;
 
     public PaymentGatewayService(@Qualifier("masterCardService") CardService<MasterCard> masterCardService, @Qualifier("visaService") CardService<Visa> visaService,
                                   @Qualifier("MTransactionServiceImpl") TransactionService<MasterCardTransaction> mTransactionService,
-                                 @Qualifier("VTransactionServiceImpl") TransactionService<VisaTransaction> vTransactionService){
+                                 @Qualifier("VTransactionServiceImpl") TransactionService<VisaTransaction> vTransactionService, OrderRepository orderRepository){
         this.masterCardService = masterCardService;
         this.visaService = visaService;
 //        this.recipientService = recipientService;
         this.mTransactionService = mTransactionService;
         this.vTransactionService = vTransactionService;
-//        this.orderRepository = orderRepository;
+        this.orderRepository = orderRepository;
     }
 
     @KafkaListener(groupId = "order", topics = "Order-Created")
@@ -58,30 +59,17 @@ public class PaymentGatewayService {
 
         if(length==16 && firstDigit=='5'){
             MasterCard masterCard = (MasterCard) masterCardService.getByCardNumber(ccNumber);
-//            masterCard.setName(card.getName());
-//            masterCard.setPin(card.getPin());
-//            masterCard.setCardNumber(card.getCardNumber());
-//            masterCard.setExpDate(card.getExpDate());
-//            masterCard.setCardType(CardType.MASTERCARD);
-//            masterCard.setAvailableBalance(card.getAvailableBalance());
-
+            System.out.println(masterCard.getCardNumber());
             masterCardService.processTransaction(masterCard, payTo);
 
         }
         else if (length==16 && firstDigit=='4'){
             Visa visa = (Visa) visaService.getByCardNumber(ccNumber);
-//            visa.setName(card.getName());
-//            visa.setPin(card.getPin());
-//            visa.setCardNumber(card.getCardNumber());
-//            visa.setExpDate(card.getExpDate());
-//            visa.setCardType(CardType.VISA);
-//            visa.setAvailableBalance(card.getAvailableBalance());
 
             visaService.processTransaction(visa, payTo);
         }
         else throw new InvalidPaymentException("Payment Transaction failed");
 
-//        KafkaTemplate<String, ProductDto> producer;
 
         ProductDto productDto = new ProductDto();
         productDto.setOrderId(order.getOrderId());
@@ -95,7 +83,7 @@ public class PaymentGatewayService {
         }
         System.out.println(order.getUserEmail());
         producer.send("Payment-Being-Paid",productDto);
-        return order;
+        return orderRepository.save(order);
     }
 
 //    @KafkaListener(groupId = "payReverse", topics = "Fail-Qty-Deduction")
@@ -113,11 +101,21 @@ public class PaymentGatewayService {
 //            MasterCard masterCard = (MasterCard) masterCardService.getByCardNumber(ccNumber);
 //            for(PayTo p: order.getPayTo()){
 //                masterCard.setAvailableBalance(masterCard.getAvailableBalance() + p.getPrice());
+//                masterCardService.updateCard(masterCard, masterCard.getMasterCardId());
 //            }
 //
 //        }
 //
+//        else if(firstDigit=='4'){
+//            Visa visa = (Visa) visaService.getByCardNumber(ccNumber);
+//            for(PayTo p: order.getPayTo()){
+//                visa.setAvailableBalance(visa.getAvailableBalance() + p.getPrice());
+//                masterCardService.updateCard(visa, visa.getVisaCardId());
+//            }
+//        }
+//
 //    }
+
 
     public <T> T verifyCard(CardInformation card){
         if(card==null){

@@ -49,11 +49,13 @@ public class MasterCardServiceImpl implements CardService<MasterCard> {
         for(PayTo p: payTo){
 //            Recipient recipient = recipientService.getRecipientByAccountNo(p.getAccountNumber());
 
-            masterCard.setAvailableBalance(masterCard.getAvailableBalance()-p.getPrice());
+            double chargedAmount = p.getPrice()*p.getQuantity();
+            masterCard.setAvailableBalance(masterCard.getAvailableBalance()-chargedAmount);
+            updateCard(masterCard, masterCard.getMasterCardId());
 //            recipient.setBalance(recipient.getBalance()+amount);
             MasterCardTransaction masterCardTransaction = new MasterCardTransaction();
             masterCardTransaction.setCard(masterCard);
-            masterCardTransaction.setChargedAmount(amount);
+            masterCardTransaction.setChargedAmount(chargedAmount);
             masterCardTransaction.setDate(LocalDate.now());
 //            masterCardTransaction.setRecipient(recipient);
 
@@ -101,7 +103,7 @@ public class MasterCardServiceImpl implements CardService<MasterCard> {
                     cardToUpdate.setName(masterCard.getName());
                     cardToUpdate.setPin(masterCard.getPin());
 
-                    return cardToUpdate;
+                    return masterCardRepository.save(cardToUpdate);
                 }).orElseThrow(() -> new EntityNotFoundException(MasterCard.class, cardId));
     }
 

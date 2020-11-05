@@ -33,7 +33,7 @@ public class VisaServiceImpl implements CardService<Visa> {
     @Override
     public void processTransaction(Visa visa, List<PayTo> payTo){
 
-        int amount = 0;
+        double amount = 0;
 
         for(PayTo p: payTo){
             amount+=p.getPrice();
@@ -44,11 +44,13 @@ public class VisaServiceImpl implements CardService<Visa> {
         for(PayTo p: payTo){
 //            Recipient recipient = recipientService.getRecipientByAccountNo(p.getAccountNumber());
 
-            visa.setAvailableBalance(visa.getAvailableBalance()-p.getPrice());
+            double chargedAmount = p.getPrice()*p.getQuantity();
+            visa.setAvailableBalance(visa.getAvailableBalance()-chargedAmount);
+            updateCard(visa, visa.getVisaCardId());
 //            recipient.setBalance(recipient.getBalance()+amount);
             VisaTransaction visaTransaction = new VisaTransaction();
             visaTransaction.setCard(visa);
-            visaTransaction.setChargedAmount(amount);
+            visaTransaction.setChargedAmount(chargedAmount);
             visaTransaction.setDate(LocalDate.now());
 //            visaTransaction.setRecipient(recipient);
 
@@ -94,7 +96,7 @@ public class VisaServiceImpl implements CardService<Visa> {
                     cardToUpdate.setName(visa.getName());
                     cardToUpdate.setPin(visa.getPin());
 
-                    return cardToUpdate;
+                    return visaRepository.save(cardToUpdate);
                 }).orElseThrow(() -> new EntityNotFoundException(Visa.class, cardId));
     }
 

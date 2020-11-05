@@ -14,7 +14,7 @@ public class MasterCardTransaction{
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long masterTransactionId;
-    @ManyToOne(cascade = CascadeType.PERSIST)
+    @ManyToOne(cascade = CascadeType.MERGE)
     @JoinColumn
     private MasterCard card;
     private double chargedAmount;
