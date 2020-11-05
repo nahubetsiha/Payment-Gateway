@@ -10,4 +10,5 @@ public class ProductDto {
 
     private List<Product> products = new ArrayList<>();
     private Long orderId;
+    private String userEmail;
 }

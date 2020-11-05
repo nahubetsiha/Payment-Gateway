@@ -10,11 +10,11 @@ import javax.persistence.Id;
 import java.time.LocalDate;
 
 @Data
-@Entity
+//@Entity
 public class CardInformation {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+//    @Id
+//    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long cardId;
     private String cardNumber;//string
     private String pin;//string

@@ -5,10 +5,10 @@ import com.pm.paymentgateway.exception.InvalidPaymentException;
 import com.pm.paymentgateway.model.MasterCard;
 import com.pm.paymentgateway.model.MasterCardTransaction;
 import com.pm.paymentgateway.model.PayTo;
-import com.pm.paymentgateway.model.Recipient;
+//import com.pm.paymentgateway.model.Recipient;
 import com.pm.paymentgateway.repository.MasterCardRepository;
 import com.pm.paymentgateway.service.CardService;
-import com.pm.paymentgateway.service.RecipientService;
+//import com.pm.paymentgateway.service.RecipientService;
 import com.pm.paymentgateway.service.TransactionService;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.kafka.annotation.KafkaListener;
@@ -24,13 +24,13 @@ import java.util.Optional;
 public class MasterCardServiceImpl implements CardService<MasterCard> {
 
     MasterCardRepository masterCardRepository;
-    RecipientService recipientService;
+//    RecipientService recipientService;
     TransactionService<MasterCardTransaction> mTransactionService;
 
-    public MasterCardServiceImpl(MasterCardRepository masterCardRepository, RecipientService recipientService,
+    public MasterCardServiceImpl(MasterCardRepository masterCardRepository,
                                  @Qualifier("MTransactionServiceImpl") TransactionService<MasterCardTransaction> mTransactionService){
         this.masterCardRepository = masterCardRepository;
-        this.recipientService = recipientService;
+//        this.recipientService = recipientService;
         this.mTransactionService = mTransactionService;
     }
 
@@ -49,7 +49,7 @@ public class MasterCardServiceImpl implements CardService<MasterCard> {
         for(PayTo p: payTo){
 //            Recipient recipient = recipientService.getRecipientByAccountNo(p.getAccountNumber());
 
-            masterCard.setAvailableBalance(masterCard.getAvailableBalance()-amount);
+            masterCard.setAvailableBalance(masterCard.getAvailableBalance()-p.getPrice());
 //            recipient.setBalance(recipient.getBalance()+amount);
             MasterCardTransaction masterCardTransaction = new MasterCardTransaction();
             masterCardTransaction.setCard(masterCard);

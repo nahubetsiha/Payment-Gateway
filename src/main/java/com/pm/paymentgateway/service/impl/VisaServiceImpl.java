@@ -5,7 +5,7 @@ import com.pm.paymentgateway.exception.InvalidPaymentException;
 import com.pm.paymentgateway.model.*;
 import com.pm.paymentgateway.repository.VisaRepository;
 import com.pm.paymentgateway.service.CardService;
-import com.pm.paymentgateway.service.RecipientService;
+//import com.pm.paymentgateway.service.RecipientService;
 import com.pm.paymentgateway.service.TransactionService;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
@@ -21,13 +21,13 @@ public class VisaServiceImpl implements CardService<Visa> {
 
     VisaRepository visaRepository;
     TransactionService<VisaTransaction> vTransactionService;
-    RecipientService recipientService;
+//    RecipientService recipientService;
 
-    public VisaServiceImpl(VisaRepository visaRepository, RecipientService recipientService,
+    public VisaServiceImpl(VisaRepository visaRepository,
                            @Qualifier("VTransactionServiceImpl") TransactionService<VisaTransaction> vTransactionService){
         this.visaRepository = visaRepository;
         this.vTransactionService = vTransactionService;
-        this.recipientService = recipientService;
+//        this.recipientService = recipientService;
     }
 
     @Override
@@ -44,7 +44,7 @@ public class VisaServiceImpl implements CardService<Visa> {
         for(PayTo p: payTo){
 //            Recipient recipient = recipientService.getRecipientByAccountNo(p.getAccountNumber());
 
-            visa.setAvailableBalance(visa.getAvailableBalance()-amount);
+            visa.setAvailableBalance(visa.getAvailableBalance()-p.getPrice());
 //            recipient.setBalance(recipient.getBalance()+amount);
             VisaTransaction visaTransaction = new VisaTransaction();
             visaTransaction.setCard(visa);

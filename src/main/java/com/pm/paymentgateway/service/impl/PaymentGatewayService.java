@@ -3,7 +3,7 @@ package com.pm.paymentgateway.service.impl;
 import com.pm.paymentgateway.exception.EntityNotFoundException;
 import com.pm.paymentgateway.exception.InvalidPaymentException;
 import com.pm.paymentgateway.model.*;
-import com.pm.paymentgateway.repository.OrderRepository;
+//import com.pm.paymentgateway.repository.OrderRepository;
 import com.pm.paymentgateway.service.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -21,23 +21,23 @@ public class PaymentGatewayService {
 
     CardService masterCardService;
     CardService visaService;
-    RecipientService recipientService;
+//    RecipientService recipientService;
     TransactionService<MasterCardTransaction> mTransactionService;
     TransactionService<VisaTransaction> vTransactionService;
-    OrderRepository orderRepository;
+//    OrderRepository orderRepository;
 
     public PaymentGatewayService(@Qualifier("masterCardService") CardService<MasterCard> masterCardService, @Qualifier("visaService") CardService<Visa> visaService,
-                                 RecipientService recipientService, @Qualifier("MTransactionServiceImpl") TransactionService<MasterCardTransaction> mTransactionService,
-                                 @Qualifier("VTransactionServiceImpl") TransactionService<VisaTransaction> vTransactionService, OrderRepository orderRepository){
+                                  @Qualifier("MTransactionServiceImpl") TransactionService<MasterCardTransaction> mTransactionService,
+                                 @Qualifier("VTransactionServiceImpl") TransactionService<VisaTransaction> vTransactionService){
         this.masterCardService = masterCardService;
         this.visaService = visaService;
-        this.recipientService = recipientService;
+//        this.recipientService = recipientService;
         this.mTransactionService = mTransactionService;
         this.vTransactionService = vTransactionService;
-        this.orderRepository = orderRepository;
+//        this.orderRepository = orderRepository;
     }
 
-//    @KafkaListener(groupId = "order", topics = "Order-Created")
+    @KafkaListener(groupId = "order", topics = "Order-Created")
     public Order processTransaction(Order order){
 
         CardInformation card = order.getCardInfo();
@@ -90,11 +90,34 @@ public class PaymentGatewayService {
             Product product = new Product();
             product.setProductId(p.getProductId());
             product.setQuantity(p.getQuantity());
+            productDto.setUserEmail(order.getUserEmail());
             productDto.getProducts().add(product);
         }
+        System.out.println(order.getUserEmail());
         producer.send("Payment-Being-Paid",productDto);
-        return orderRepository.save(order);
+        return order;
     }
+
+//    @KafkaListener(groupId = "payReverse", topics = "Fail-Qty-Deduction")
+//    public void reverseTransaction(Long orderId){
+//        Order order = orderRepository.getOne(orderId);
+//
+//        if(order==null){
+//            throw new EntityNotFoundException(Order.class);
+//        }
+//
+//        String ccNumber = order.getCardInfo().getCardNumber();
+//        char firstDigit = String.valueOf(ccNumber).charAt(0);
+//
+//        if(firstDigit=='5') {
+//            MasterCard masterCard = (MasterCard) masterCardService.getByCardNumber(ccNumber);
+//            for(PayTo p: order.getPayTo()){
+//                masterCard.setAvailableBalance(masterCard.getAvailableBalance() + p.getPrice());
+//            }
+//
+//        }
+//
+//    }
 
     public <T> T verifyCard(CardInformation card){
         if(card==null){
